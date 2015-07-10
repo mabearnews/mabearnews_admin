@@ -1,0 +1,90 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-material/paper-material.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<dom-module id='article-card'>
+  <style>
+    :host {
+      display: block;
+      max-width: 320px;
+    }
+    .card-container {
+      @apply(--layout-vertical);
+      margin-left: 16px;
+      margin-right: 16px;
+      margin-bottom: 40px;
+    }
+    
+    .inline {
+      @apply(--layout-horizontal);
+    }
+    
+    #bottom-spacer {
+      height: 32px;
+      
+    }
+  </style>
+
+  <template>
+   <paper-material elevation="1">
+     <div class="card-container">
+      <h1 class="paper-font-display1">{{article.title}}</h1>
+      <div class="inline">
+        <p class="paper-font-subhead">{{article.author.fullname}}</p>
+        <div class="flex"></div>
+        <p class="paper-font-subhead">{{article.meta.date}}</p> 
+      </div>
+      <p class="paper-font-body1">{{preview}}</p>
+      <paper-button raised style="background: #F44336; color: #FFFFFF">Edit</paper-button>
+       
+       <div id="bottom-spacer"></div>
+       </div>
+   </paper-material>
+  </template>
+
+
+  <script>
+    Polymer({
+        is: 'article-card',
+        
+        properties: {
+          article: Object,
+          preview: {
+            type: String,
+            computed: 'getArticlePreview(article.content)'
+          }
+          
+        },
+        
+        ready: function() {
+          this.article = {
+            "title":"Tennis Community Opposes New Construction Plans",
+              "author":{
+                "fullname":"Erin Perrine",
+                "profile_page":"www.google.com"
+              },
+              "meta":{
+                "date":"05/04/15",
+                "tags":["tennis","construction"]
+              },
+              "content": ["Hello", "Hello2", "Hello3" ]
+          };
+        },
+          
+        getArticlePreview: function(arr) {
+          var PREVIEW_LENGTH = 2;
+          var i = 0;
+          var str = "";
+          while(i < PREVIEW_LENGTH && i < arr.length){
+            str += arr[i] + " ";
+            i++;
+          }
+          str = str.substring(0, str.length - 1);
+          return str;
+        }
+        
+      });
+  </script>
+  
+</dom-module>

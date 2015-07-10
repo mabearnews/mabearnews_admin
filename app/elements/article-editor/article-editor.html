@@ -1,0 +1,127 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-material/paper-material.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-input/paper-textarea.html">
+
+<dom-module id="article-editor">
+  <style>
+  :host {
+    display: block;
+    max-width: 800px;
+  }
+    
+  .card-container {
+      @apply(--layout-vertical);
+      margin-left: 16px;
+      margin-right: 16px;
+      margin-bottom: 40px;
+    }
+    
+  .inline {
+    @apply(--layout-horizontal);
+  }
+    
+    
+  </style>
+
+  <template>
+    <paper-material elevation="1">
+      <div class="card-container">
+        <paper-input value="{{article.title}}" label="Title"></paper-input>
+        <paper-input value="{{article.author.fullname}}" label="Author"></paper-input>
+        <h1 class="paper-font-title">Meta</h1>
+        <paper-input value="{{article.meta.date}}" label="Date"></paper-input>
+        <paper-input value="{{rawTags}}" label="Tags"></paper-input>
+        <h1 class="paper-font-title">Content</h1>
+        <paper-textarea value="{{rawContent}}" label="Markdown here:"></paper-textarea>
+        <p>{{objectJSON}}</p>
+      </div>
+    </paper-material>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'article-editor',
+      properties: {
+        article: {
+          type: Object,
+          notify: true,
+          // Empty article object blueprint
+          value: {
+            "title":"",
+            "author":{
+              "fullname":"",
+              "profile_page":""
+            },
+            "meta":{
+              "date":"",
+              "tags":[]
+            },
+            "content": []
+          }
+        },
+        
+        rawContent: {
+          type: String,
+          notify: true,
+          observer: 'rawContentChanged'
+        },
+        
+        rawTags: {
+          type: String,
+          notify: true,
+          observer: 'rawTagsChanged'
+        },
+        
+        objectJSON: {
+          type: String,
+          notify: true,
+        }
+      },
+      
+      observers: [
+        'articleChanged(article.*)'
+      ],
+      
+      ready: function() {
+        this.set('objectJSON', JSON.stringify(this.article));
+      },
+
+      
+      articleToJSON: function(article) {
+        var json = JSON.stringify(this.article);
+        return json;
+      },
+      
+      // Update JSON or preview when article object is changed
+      articleChanged: function(newValue, oldValue) {
+        this.set('objectJSON', JSON.stringify(newValue.base));
+      },
+      
+      rawTagsChanged: function(newValue, oldValue) {
+        arr = newValue.split(",");
+        // remove any whitespace
+        for(var i = 0; i < arr.length; i++){
+          arr[i] = arr[i].trim();
+        }
+        this.set('article.meta.tags', arr);
+      },
+      
+      rawContentChanged: function(newValue, oldValue) {
+        var arr = [];
+        var lastBreak = 0;
+        for(var i = 0; i < newValue.length; i++){
+          if(newValue.charAt(i) == '\n' ||
+            i == newValue.length - 1){
+            arr.push(newValue.substring(lastBreak, i + 1));
+            lastBreak = i;
+          }
+        }
+        arr = newValue.split("\n");
+        this.set('article.content', arr);
+      }
+    });
+  </script>
+</dom-module>
