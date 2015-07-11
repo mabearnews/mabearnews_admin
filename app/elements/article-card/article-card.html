@@ -22,8 +22,12 @@
     
     #bottom-spacer {
       height: 32px;
-      
     }
+    paper-button {
+      background: #F44336;
+      color: #FFFFFF;
+    }
+    
   </style>
 
   <template>
@@ -36,7 +40,7 @@
         <p class="paper-font-subhead">{{article.meta.date}}</p> 
       </div>
       <p class="paper-font-body1">{{preview}}</p>
-      <paper-button raised style="background: #F44336; color: #FFFFFF">Edit</paper-button>
+      <paper-button raised>Edit</paper-button>
        
        <div id="bottom-spacer"></div>
        </div>
@@ -46,45 +50,48 @@
 
   <script>
     Polymer({
-        is: 'article-card',
-        
-        properties: {
-          article: Object,
-          preview: {
-            type: String,
-            computed: 'getArticlePreview(article.content)'
-          }
-          
-        },
-        
-        ready: function() {
-          this.article = {
-            "title":"Tennis Community Opposes New Construction Plans",
-              "author":{
-                "fullname":"Erin Perrine",
-                "profile_page":"www.google.com"
-              },
-              "meta":{
-                "date":"05/04/15",
-                "tags":["tennis","construction"]
-              },
-              "content": ["Hello", "Hello2", "Hello3" ]
-          };
-        },
-          
-        getArticlePreview: function(arr) {
-          var PREVIEW_LENGTH = 2;
-          var i = 0;
-          var str = "";
-          while(i < PREVIEW_LENGTH && i < arr.length){
-            str += arr[i] + " ";
-            i++;
-          }
-          str = str.substring(0, str.length - 1);
-          return str;
+      is: 'article-card',
+      
+      factoryImpl: function(article) {
+        this.article = article;
+      },
+      
+      properties: {
+        article: Object,
+        preview: {
+          type: String,
+          computed: 'getArticlePreview(article.content)'
         }
+          
+      },
         
-      });
+      ready: function() {
+        this.article = {
+          "title":"Tennis Community Opposes New Construction Plans",
+          "author":{
+            "fullname":"Erin Perrine",
+            "profile_page":"www.google.com"
+          },
+          "meta":{
+            "date":"05/04/15",
+            "tags":["tennis","construction"]
+            },
+          "content": ["Hello", "Hello2", "Hello3" ]
+        };
+      },
+      getArticlePreview: function(arr) {
+        var PREVIEW_LENGTH = 2;
+        var i = 0;
+        var str = "";
+        while(i < PREVIEW_LENGTH && i < arr.length){
+          str += arr[i] + " ";
+          i++;
+        }
+        str = str.substring(0, str.length - 1);
+        return str;
+      }
+        
+    });
   </script>
   
 </dom-module>

@@ -7,22 +7,30 @@
 
 <dom-module id="article-editor">
   <style>
-  :host {
-    display: block;
-    max-width: 800px;
-  }
+    :host {
+      display: block;
+      max-width: 800px;
+    }
     
-  .card-container {
+    .card-container {
       @apply(--layout-vertical);
       margin-left: 16px;
       margin-right: 16px;
       margin-bottom: 40px;
     }
     
-  .inline {
-    @apply(--layout-horizontal);
-  }
+    .inline {
+      @apply(--layout-horizontal);
+    }
     
+    #bottom-spacer {
+      height: 32px;
+    }
+  
+    paper-button {
+      background: #F44336;
+      color: #FFFFFF;
+    }
     
   </style>
 
@@ -37,6 +45,8 @@
         <h1 class="paper-font-title">Content</h1>
         <paper-textarea value="{{rawContent}}" label="Markdown here:"></paper-textarea>
         <p>{{objectJSON}}</p>
+        <paper-button raised on-click="saveButtonClicked">Save</paper-button>
+        <div id="bottom-spacer"></div>
       </div>
     </paper-material>
   </template>
@@ -44,6 +54,7 @@
   <script>
     Polymer({
       is: 'article-editor',
+      
       properties: {
         article: {
           type: Object,
@@ -121,6 +132,10 @@
         }
         arr = newValue.split("\n");
         this.set('article.content', arr);
+      },
+      
+      saveButtonClicked: function() {
+        
       }
     });
   </script>
